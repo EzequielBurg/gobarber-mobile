@@ -13,6 +13,7 @@ import Input from '../../components/Input';
 import Button from '../../components/Button';
 
 import { Container, Title, BackToLogon, BackToLogonText } from './styles';
+import api from '../../services/api';
 
 interface SignUpFormData {
   name: string;
@@ -27,52 +28,55 @@ const SignUp: React.FC = () => {
   const emailInputref = useRef<TextInput>(null);
   const passwordInputref = useRef<TextInput>(null);
 
-  const handleSignUp = useCallback(async (data: SignUpFormData) => {
-    try {
-      formRef.current?.setErrors({});
+  const handleSignUp = useCallback(
+    async (data: SignUpFormData) => {
+      try {
+        formRef.current?.setErrors({});
 
-      const schema = Yup.object().shape({
-        name: Yup.string().required('Nome obrigatório'),
-        email: Yup.string()
-          .required('Email obrigatório')
-          .email('Digite um email válido'),
-        password: Yup.string()
-          .required('Senha obrigatória')
-          .min(6, 'Mínimo 6 dígitos'),
-      });
+        const schema = Yup.object().shape({
+          name: Yup.string().required('Nome obrigatório'),
+          email: Yup.string()
+            .required('Email obrigatório')
+            .email('Digite um email válido'),
+          password: Yup.string()
+            .required('Senha obrigatória')
+            .min(6, 'Mínimo 6 dígitos'),
+        });
 
-      await schema.validate(data, {
-        abortEarly: false,
-      });
+        await schema.validate(data, {
+          abortEarly: false,
+        });
 
-      // await api.post('/users', data);
+        await api.post('/users', data);
 
-      // history.push('/');
+        Alert.alert(
+          'Cadastro realizado!',
+          'Você já pode fazer seu logon no GoBarber!',
+        );
 
-      Alert.alert(
-        'Cadastro realizado!',
-        'Você já pode fazer seu logon no GoBarber!',
-      );
+        navigation.goBack();
 
-      // addToast({
-      //   type: 'success',
-      //   title: 'Cadastro realizado!',
-      //   description: 'Você já pode fazer seu logon no GoBarber!',
-      // });
-    } catch (error) {
-      if (error instanceof Yup.ValidationError) {
-        const errors = getValidationError(error);
-        formRef.current?.setErrors(errors);
+        // addToast({
+        //   type: 'success',
+        //   title: 'Cadastro realizado!',
+        //   description: 'Você já pode fazer seu logon no GoBarber!',
+        // });
+      } catch (error) {
+        if (error instanceof Yup.ValidationError) {
+          const errors = getValidationError(error);
+          formRef.current?.setErrors(errors);
 
-        return;
+          return;
+        }
+
+        Alert.alert(
+          'Erro no cadastro',
+          'Ocorreu um erro ao fazer cadastro. Tente novamente',
+        );
       }
-
-      Alert.alert(
-        'Erro no cadastro',
-        'Ocorreu um erro ao fazer cadastro. Tente novamente',
-      );
-    }
-  }, []);
+    },
+    [navigation],
+  );
 
   return (
     <>
