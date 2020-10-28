@@ -37,6 +37,7 @@
       "react/jsx-props-no-spreading": "off",
       "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/camelcase": "off",
+      "import/no-duplicates": "off",
       "no-console": "off",
       "no-unused-expressions": "off",
       "import/extensions": [

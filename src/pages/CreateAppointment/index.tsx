@@ -106,7 +106,7 @@ const CreateAppointment: React.FC = () => {
 
       date.setHours(selectedHour);
       date.setMinutes(0);
-      console.log(selectedProvider, date);
+
       await api
         .post('appointments', {
           provider_id: selectedProvider,
@@ -114,7 +114,6 @@ const CreateAppointment: React.FC = () => {
         })
         .then(() => navigate('AppointmentCreated', { date: date.getTime() }))
         .catch(err => {
-          console.log('error: ', err.message);
           Alert.alert(
             'Erro ao criar o agendamento',
             'Ocorreu um erro ao tentar criar o agendamento. Tente novamente',
@@ -139,7 +138,7 @@ const CreateAppointment: React.FC = () => {
         };
       });
   }, [availability]);
-  console.log('morningAvailability', morningAvailability);
+
   const afternoonAvailability = useMemo(() => {
     return availability
       .filter(({ hour }) => hour >= 12)
